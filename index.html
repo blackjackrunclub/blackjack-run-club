@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090a0c">
+
+<title>Blackjack Run Club</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #090a0c;
+  color: #f5f5f5;
+  font-family: Arial, Helvetica, sans-serif;
+  padding-bottom: 90px;
+}
+
+header {
+  padding: 32px 24px 25px;
+  border-bottom: 1px solid #333;
+}
+
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: #999;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 12px 0 4px;
+  font-size: 38px;
+  line-height: .95;
+  text-transform: uppercase;
+}
+
+.tagline {
+  margin-top: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+main {
+  padding: 24px;
+}
+
+.card {
+  border: 1px solid #555;
+  padding: 22px;
+  margin-bottom: 18px;
+}
+
+.label {
+  color: #999;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.next-run {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 14px 0;
+  text-transform: uppercase;
+}
+
+.details {
+  color: #bbb;
+  line-height: 1.8;
+}
+
+button {
+  margin-top: 18px;
+  padding: 14px 18px;
+  border: 0;
+  background: #f5f5f5;
+  color: #090a0c;
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 76px;
+  background: #101114;
+  border-top: 1px solid #333;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+nav button {
+  margin: 0;
+  padding: 10px 5px;
+  background: transparent;
+  color: #aaa;
+  font-size: 11px;
+  width: 20%;
+}
+
+nav button.active {
+  color: white;
+}
+
+.spade {
+  font-size: 26px;
+  display: block;
+  margin-bottom: 2px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="eyebrow">Corpus Christi, Texas</div>
+  <h1>Blackjack<br>Run Club</h1>
+  <div class="tagline">RUN UNTAMED.</div>
+</header>
+
+<main>
+
+<section id="home" class="page active">
+  <div class="card">
+    <div class="label">Next Run</div>
+    <div class="next-run">Sunday Long Run</div>
+    <div class="details">
+      6:00 AM<br>
+      Corpus Christi, TX<br>
+      Distance announced weekly
+    </div>
+    <button onclick="showPage('checkin')">Check In</button>
+  </div>
+
+  <div class="card">
+    <div class="label">Blackjack</div>
+    <div class="next-run">Never. Miss. A. Sunday.</div>
+    <div class="details">
+      The road owes you nothing.<br>
+      Bet on yourself.
+    </div>
+  </div>
+</section>
+
+<section id="runs" class="page">
+  <div class="label">Weekly Runs</div>
+  <h2>RUNS</h2>
+
+  <div class="card">
+    <strong>Sunday Long Run</strong>
+    <div class="details">6:00 AM</div>
+  </div>
+
+  <div class="card">
+    <strong>Tuesday Social</strong>
+    <div class="details">6:00 PM • People's St. T-Head</div>
+  </div>
+</section>
+
+<section id="events" class="page">
+  <div class="label">Blackjack Originals</div>
+  <h2>EVENTS</h2>
+
+  <div class="card">
+    <strong>THE CUT</strong>
+    <div class="details">Member Exclusive Event</div>
+  </div>
+
+  <div class="card">
+    <strong>DURUS SIM</strong>
+    <div class="details">Details coming soon.</div>
+  </div>
+</section>
+
+<section id="checkin" class="page">
+  <div class="label">Roll Call</div>
+  <h2>CHECK IN</h2>
+
+  <div class="card">
+    <div class="next-run">I'M HERE.</div>
+    <div class="details">
+      Attendance tracking will be added next.
+    </div>
+  </div>
+</section>
+
+<section id="about" class="page">
+  <div class="label">More Than A Run Club</div>
+  <h2>BLACKJACK</h2>
+
+  <div class="card">
+    <div class="next-run">RUN DIFFERENT.</div>
+    <div class="details">
+      Corpus Christi, Texas<br><br>
+      Run Untamed.<br>
+      Bet On Yourself.<br>
+      The Streets Are Free.
+    </div>
+  </div>
+</section>
+
+</main>
+
+<nav>
+  <button class="active" onclick="showPage('home', this)">
+    <span class="spade">♠</span>HOME
+  </button>
+
+  <button onclick="showPage('runs', this)">
+    <span class="spade">♠</span>RUNS
+  </button>
+
+  <button onclick="showPage('events', this)">
+    <span class="spade">♠</span>EVENTS
+  </button>
+
+  <button onclick="showPage('checkin', this)">
+    <span class="spade">♠</span>CHECK IN
+  </button>
+
+  <button onclick="showPage('about', this)">
+    <span class="spade">♠</span>ABOUT
+  </button>
+</nav>
+
+<script>
+function showPage(pageId, button) {
+  document.querySelectorAll('.page').forEach(page => {
+    page.classList.remove('active');
+  });
+
+  document.getElementById(pageId).classList.add('active');
+
+  if (button) {
+    document.querySelectorAll('nav button').forEach(btn => {
+      btn.classList.remove('active');
+    });
+
+    button.classList.add('active');
+  }
+
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
