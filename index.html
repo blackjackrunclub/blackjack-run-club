@@ -211,7 +211,31 @@ nav button.active {
   </div>
 </section>
 
-<section id="about" class="page">
+<section id="safety" class="page">
+
+  <div class="label">Runner Safety</div>
+  <h2>NEED HELP?</h2>
+
+  <div class="card">
+    <div class="next-run">NEED ASSISTANCE</div>
+    <div class="details">
+      Injured. Stranded. Feel unsafe. Need someone from Blackjack.
+    </div>
+    <br>
+    <button onclick="getRunnerLocation()">SHARE MY LOCATION</button>
+  </div>
+
+  <div class="card">
+    <div class="next-run">EMERGENCY</div>
+    <div class="details">
+      Immediate danger or medical emergency.
+    </div>
+    <br>
+    <a href="tel:911"><button>CALL 911</button></a>
+  </div>
+
+</section>
+  <section id="about" class="page">
   <div class="label">More Than A Run Club</div>
   <h2>BLACKJACK</h2>
 
@@ -244,7 +268,11 @@ nav button.active {
   <button onclick="showPage('checkin', this)">
     <span class="spade">♠</span>CHECK IN
   </button>
-
+  
+<button onclick="showPage('safety', this)">
+    <span class="spade">♠</span>SAFETY
+</button>
+  
   <button onclick="showPage('about', this)">
     <span class="spade">♠</span>ABOUT
   </button>
@@ -267,6 +295,34 @@ function showPage(pageId, button) {
   }
 
   window.scrollTo(0, 0);
+}function getRunnerLocation() {
+  if (!navigator.geolocation) {
+    alert("Location sharing is not supported on this device.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      const mapLink = `https://maps.google.com/?q=${lat},${lon}`;
+
+      if (navigator.share) {
+        navigator.share({
+          title: "Blackjack Runner Assistance",
+          text: "I need assistance. Here is my current location:",
+          url: mapLink
+        });
+      } else {
+        navigator.clipboard.writeText(mapLink);
+        alert("Location copied. Send it to a Blackjack member.");
+      }
+    },
+    function() {
+      alert("Unable to get your location. Please make sure location access is enabled.");
+    }
+  );
 }
 </script>
 
