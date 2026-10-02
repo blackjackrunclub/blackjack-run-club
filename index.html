@@ -216,14 +216,19 @@ nav button.active {
   <div class="label">Runner Safety</div>
   <h2>NEED HELP?</h2>
 
-  <div class="card">
-    <div class="next-run">NEED ASSISTANCE</div>
-    <div class="details">
-      Injured. Stranded. Feel unsafe. Need someone from Blackjack.
-    </div>
-    <br>
-    <button onclick="getRunnerLocation()">SHARE MY LOCATION</button>
+<div class="card">
+  <div class="next-run">NEED ASSISTANCE</div>
+
+  <div class="details">
+    Choose what you need, then share your location.
   </div>
+
+  <br>
+
+  <button onclick="getRunnerLocation('INJURED')">INJURED</button>
+  <button onclick="getRunnerLocation('STRANDED')">STRANDED</button>
+  <button onclick="getRunnerLocation('FEEL UNSAFE')">FEEL UNSAFE</button>
+</div>
 
   <div class="card">
     <div class="next-run">EMERGENCY</div>
@@ -295,7 +300,7 @@ function showPage(pageId, button) {
   }
 
   window.scrollTo(0, 0);
-}function getRunnerLocation() {
+}function getRunnerLocation(reason) {
   if (!navigator.geolocation) {
     alert("Location sharing is not supported on this device.");
     return;
@@ -311,7 +316,7 @@ function showPage(pageId, button) {
       if (navigator.share) {
         navigator.share({
           title: "Blackjack Runner Assistance",
-          text: "I need assistance. Here is my current location:",
+          text: "BLACKJACK RUNNER ASSISTANCE\n\nI need assistance: " + reason + "\n\nHere is my current location:",
           url: mapLink
         });
       } else {
