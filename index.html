@@ -60,7 +60,39 @@
   .bj-editorial-intro {
     padding: 32px 20px 40px;
   }
+/* BLACKJACK SCROLL MOTION */
 
+.scroll-photo {
+  transform: scale(1);
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(55px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-photo {
+    transform: none !important;
+  }
+
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
   .bj-editorial-intro h1 {
     font-size: 16vw;
     line-height: 0.9;
@@ -204,7 +236,7 @@ nav button.active {
   <img
     src="PXL_20260905_145253234~2.jpg"
     alt="Blackjack Run Club"
-    class="bj-editorial-photo"
+    class="bj-editorial-photo scroll-photo"
   >
 
   <div class="bj-editorial-intro">
@@ -212,7 +244,7 @@ nav button.active {
       CORPUS CHRISTI, TEXAS
     </div>
 
-    <h1>RUN DIFFERENT.</h1>
+   <h1 class="scroll-reveal">RUN DIFFERENT.</h1>
 
     <div class="bj-editorial-sub">
       BLACKJACK RUN CLUB
@@ -988,6 +1020,61 @@ window.addEventListener("appinstalled", () => {
 });
 
 setupBlackjackInstall();
+/* BLACKJACK SCROLL MOTION */
+
+const blackjackPhoto = document.querySelector(".scroll-photo");
+const revealElements = document.querySelectorAll(".scroll-reveal");
+
+function updateBlackjackScrollMotion() {
+  if (!blackjackPhoto) return;
+
+  const rect = blackjackPhoto.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
+
+  if (rect.bottom > 0 && rect.top < windowHeight) {
+    const progress =
+      (windowHeight - rect.top) / (windowHeight + rect.height);
+
+    const clampedProgress = Math.max(0, Math.min(1, progress));
+
+    // Very subtle movement — keeps the entire photo intact.
+    const scale = 1 + clampedProgress * 0.035;
+    const moveY = (clampedProgress - 0.5) * 12;
+
+    blackjackPhoto.style.transform =
+      `translateY(${moveY}px) scale(${scale})`;
+  }
+}
+
+const blackjackRevealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+      }
+    });
+  },
+  {
+    threshold: 0.25
+  }
+);
+
+revealElements.forEach((element) => {
+  blackjackRevealObserver.observe(element);
+});
+
+window.addEventListener(
+  "scroll",
+  updateBlackjackScrollMotion,
+  { passive: true }
+);
+
+window.addEventListener(
+  "resize",
+  updateBlackjackScrollMotion
+);
+
+updateBlackjackScrollMotion();
 </script>
 
 <div id="photoModal"
