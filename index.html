@@ -600,16 +600,39 @@ async function checkInRunner() {
     return;
   }
 
-  // Use today's local date for the roll call
-  const today = new Date();
-  const runDate =
-    today.getFullYear() + "-" +
-    String(today.getMonth() + 1).padStart(2, "0") + "-" +
-    String(today.getDate()).padStart(2, "0");
+  // Determine today's Blackjack run
+const today = new Date();
 
-  // Use the automatically calculated run name
-  const runName =
-    document.getElementById("nextRunName").textContent.trim();
+const runDate =
+  today.getFullYear() + "-" +
+  String(today.getMonth() + 1).padStart(2, "0") + "-" +
+  String(today.getDate()).padStart(2, "0");
+
+let runName = "";
+
+const dayOfWeek = today.getDay();
+
+// Sunday Long Run
+if (dayOfWeek === 0) {
+  runName = "SUNDAY LONG RUN";
+}
+
+// Tuesday
+else if (dayOfWeek === 2) {
+
+  // First Tuesday always falls between the 1st and 7th
+  if (today.getDate() <= 7) {
+    runName = "TRACK TUESDAY";
+  } else {
+    runName = "PEOPLES ST SOCIAL";
+  }
+}
+
+// No regular Blackjack run today
+else {
+  alert("Regular Blackjack check-in is only available on Sundays and Tuesdays.");
+  return;
+}
 
   try {
     const response = await fetch(ROLL_CALL_API + "/checkin", {
