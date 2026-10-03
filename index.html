@@ -537,34 +537,34 @@ nav button.active {
 </main>
 
 <nav>
-  <button class="active" onclick="showPage('home', this)">
+  <button class="active" onclick="goToSection('home', this)">
     <span class="spade">♠</span>HOME
   </button>
 
- <button onclick="document.getElementById('runs').scrollIntoView({behavior:'smooth'});">
+ <button onclick="goToSection('runs', this)">
     <span class="spade">♠</span>RUNS
   </button>
 
-  <button onclick="showPage('events', this)">
+  <button onclick="goToSection('events', this)">
     <span class="spade">♠</span>EVENTS
   </button>
 
-  <button onclick="showPage('checkin', this)">
+  <button onclick="goToSection('checkin', this)">
     <span class="spade">♠</span>CHECK IN
   </button>
   
-<button onclick="showPage('safety', this)">
+<button onclick="goToSection('safety', this)">
     <span class="spade">♠</span>SAFETY
 </button>
   
-  <button onclick="showPage('about', this)">
+  <button onclick="goToSection('about', this)">
     <span class="spade">♠</span>ABOUT
   </button>
 </nav>
 
 <script>
-function showPage(pageId, button) {
-  const section = document.getElementById(pageId);
+function goToSection(sectionId, button) {
+  const section = document.getElementById(sectionId);
 
   if (section) {
     section.scrollIntoView({
@@ -573,11 +573,11 @@ function showPage(pageId, button) {
     });
   }
 
-  if (button) {
-    document.querySelectorAll("nav button").forEach(btn => {
-      btn.classList.remove("active");
-    });
+  document.querySelectorAll("nav button").forEach(btn => {
+    btn.classList.remove("active");
+  });
 
+  if (button) {
     button.classList.add("active");
   }
 }
