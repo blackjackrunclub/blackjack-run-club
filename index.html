@@ -363,6 +363,8 @@ nav button.active {
       <span id="finishedCount">0</span> FINISHED •
       <span id="stillOutCount">0</span> STILL OUT
     </div>
+    
+    <div id="runnerList" style="margin-top:20px;"></div>
   </div>
 </section>
 
@@ -671,10 +673,58 @@ async function loadRollCall() {
       finished;
 
     document.getElementById("stillOutCount").textContent =
-      stillOut;
+      stillOut;const runnerList = document.getElementById("runnerList");
+
+runnerList.innerHTML = "";
+
+checkins.forEach(runner => {
+  const runnerRow = document.createElement("div");
+
+  runnerRow.style.padding = "15px 0";
+  runnerRow.style.borderTop = "1px solid #333";
+
+  if (runner.status === "FINISHED") {
+    runnerRow.innerHTML =
+      "<strong>" + runner.runner_name + "</strong><br>" +
+      "<span>FINISHED ✓</span>";
+  } else {
+    runnerRow.innerHTML =
+      "<strong>" + runner.runner_name + "</strong><br>" +
+      "<span>STILL OUT</span><br><br>" +
+      '<button onclick="finishRunner(' + runner.id + ')">' +
+      "I'M FINISHED" +
+      "</button>";
+  }
+
+  runnerList.appendChild(runnerRow);
+});
 
   } catch (error) {
     console.error("Unable to load roll call:", error);
+  }
+}async function finishRunner(id) {
+  try {
+    const response = await fetch(ROLL_CALL_API + "/finish", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: id
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Unable to finish runner.");
+    }
+
+    await loadRollCall();
+
+  } catch (error) {
+    console.error(error);
+    alert("Unable to mark runner finished. Try again.");
   }
 }
 
