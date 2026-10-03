@@ -677,27 +677,57 @@ async function loadRollCall() {
 
 runnerList.innerHTML = "";
 
-checkins.forEach(runner => {
-  const runnerRow = document.createElement("div");
+const stillOutRunners = checkins.filter(
+  runner => runner.status === "OUT"
+);
 
-  runnerRow.style.padding = "15px 0";
-  runnerRow.style.borderTop = "1px solid #333";
+const finishedRunners = checkins.filter(
+  runner => runner.status === "FINISHED"
+);
 
-  if (runner.status === "FINISHED") {
-    runnerRow.innerHTML =
-      "<strong>" + runner.runner_name + "</strong><br>" +
-      "<span>FINISHED ✓</span>";
-  } else {
+// STILL OUT runners first
+if (stillOutRunners.length > 0) {
+  const outHeading = document.createElement("div");
+  outHeading.innerHTML = "<strong>STILL OUT</strong>";
+  outHeading.style.margin = "20px 0 5px 0";
+  runnerList.appendChild(outHeading);
+
+  stillOutRunners.forEach(runner => {
+    const runnerRow = document.createElement("div");
+
+    runnerRow.style.padding = "15px 0";
+    runnerRow.style.borderTop = "1px solid #333";
+
     runnerRow.innerHTML =
       "<strong>" + runner.runner_name + "</strong><br>" +
       "<span>STILL OUT</span><br><br>" +
       '<button onclick="finishRunner(' + runner.id + ')">' +
       "I'M FINISHED" +
       "</button>";
-  }
 
-  runnerList.appendChild(runnerRow);
-});
+    runnerList.appendChild(runnerRow);
+  });
+}
+
+// FINISHED runners underneath
+if (finishedRunners.length > 0) {
+  const finishedHeading = document.createElement("div");
+  finishedHeading.innerHTML = "<strong>FINISHED ✓</strong>";
+  finishedHeading.style.margin = "25px 0 5px 0";
+  runnerList.appendChild(finishedHeading);
+
+  finishedRunners.forEach(runner => {
+    const runnerRow = document.createElement("div");
+
+    runnerRow.style.padding = "12px 0";
+    runnerRow.style.borderTop = "1px solid #333";
+
+    runnerRow.innerHTML =
+      "<strong>" + runner.runner_name + "</strong> — FINISHED ✓";
+
+    runnerList.appendChild(runnerRow);
+  });
+}
 
   } catch (error) {
     console.error("Unable to load roll call:", error);
