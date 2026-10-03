@@ -13,6 +13,103 @@
 <meta name="apple-mobile-web-app-title" content="Blackjack">
   
 <style>
+
+  /* BLACKJACK 2.0 HERO */
+
+.bj-hero {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 85px);
+  background-image: url('PXL_20260905_145253234~2.jpg');
+  background-size: cover;
+  background-position: center center;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 50px;
+}
+
+.bj-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.12) 0%,
+      rgba(0,0,0,0.18) 35%,
+      rgba(0,0,0,0.82) 100%
+    );
+}
+
+.bj-hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 40px 30px 75px;
+  color: white;
+}
+
+.bj-hero-location {
+  font-size: 12px;
+  letter-spacing: 4px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.bj-hero-content h1 {
+  margin: 0;
+  font-size: clamp(64px, 13vw, 170px);
+  line-height: 0.78;
+  letter-spacing: -5px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.bj-hero-brand {
+  margin-top: 25px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  font-weight: bold;
+}
+
+.bj-hero-scroll {
+  position: absolute;
+  z-index: 2;
+  right: 25px;
+  bottom: 25px;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: white;
+  writing-mode: vertical-rl;
+}
+
+/* Mobile hero */
+@media (max-width: 700px) {
+  .bj-hero {
+    min-height: calc(100vh - 75px);
+    background-position: 50% center;
+  }
+
+  .bj-hero-content {
+    padding: 30px 20px 70px;
+  }
+
+  .bj-hero-content h1 {
+    font-size: clamp(58px, 20vw, 100px);
+    line-height: 0.82;
+    letter-spacing: -3px;
+  }
+
+  .bj-hero-location {
+    font-size: 10px;
+    letter-spacing: 3px;
+  }
+
+  .bj-hero-brand {
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+}
 * {
   box-sizing: border-box;
 }
@@ -143,7 +240,24 @@ nav button.active {
 <main>
 
 <section id="home" class="page active">
-  <img src="DSC04519.jpg" alt="Blackjack Run Club" style="width:100%; height:auto; display:block; margin-bottom:30px;">
+  <div class="bj-hero">
+  <div class="bj-hero-overlay"></div>
+
+  <div class="bj-hero-content">
+    <div class="bj-hero-location">CORPUS CHRISTI, TEXAS</div>
+
+    <h1>
+      RUN<br>
+      DIFFERENT.
+    </h1>
+
+    <div class="bj-hero-brand">BLACKJACK RUN CLUB</div>
+  </div>
+
+  <div class="bj-hero-scroll">
+    SCROLL ↓
+  </div>
+</div>
   <div class="card">
   <div class="label">Next Run</div>
 
