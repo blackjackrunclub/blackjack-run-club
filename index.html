@@ -208,7 +208,17 @@ nav button {
 nav button.active {
   color: white;
 }
+nav button.active .spade {
+  color: white;
+}
 
+nav button:not(.active) {
+  color: #999;
+}
+
+nav button:not(.active) .spade {
+  color: #999;
+}
 .spade {
   font-size: 26px;
   display: block;
@@ -1074,6 +1084,42 @@ function setActiveNav(button) {
 
   button.classList.add("active");
 }
+  const navSections = ["home", "runs", "events", "checkin", "safety", "about"];
+
+function updateActiveNavOnScroll() {
+  const marker = window.innerHeight * 0.35;
+  let currentSection = "home";
+
+  navSections.forEach(sectionId => {
+    const section = document.getElementById(sectionId);
+
+    if (section) {
+      const rect = section.getBoundingClientRect();
+
+      if (rect.top <= marker) {
+        currentSection = sectionId;
+      }
+    }
+  });
+
+  document.querySelectorAll("nav button").forEach(button => {
+    button.classList.remove("active");
+
+    const clickCode = button.getAttribute("onclick") || "";
+
+    if (clickCode.includes("'" + currentSection + "'")) {
+      button.classList.add("active");
+    }
+  });
+}
+
+window.addEventListener("scroll", updateActiveNavOnScroll, {
+  passive: true
+});
+
+window.addEventListener("resize", updateActiveNavOnScroll);
+
+updateActiveNavOnScroll();
 </script>
 
 <div id="photoModal"
