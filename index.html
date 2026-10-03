@@ -14,52 +14,96 @@
   
 <style>
 
-/* BLACKJACK EDITORIAL HERO */
+/* BLACKJACK SCROLL STORY */
 
-.bj-editorial-hero {
-  width: 100%;
+.bj-scroll-story {
+  position: relative;
   background: #090a0c;
-  margin-bottom: 50px;
 }
 
-.bj-editorial-photo {
+/* Photo stays in place while next section moves over it */
+.bj-sticky-photo {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #090a0c;
+  overflow: hidden;
+}
+
+.bj-sticky-photo img {
   display: block;
   width: 100%;
   height: auto;
+  max-height: 100vh;
+  object-fit: contain;
 }
 
-.bj-editorial-intro {
-  padding: 42px 28px 48px;
+/* RUN DIFFERENT slides over the photo */
+.bj-run-different {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  background: #090a0c;
+  padding: 100px 28px 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.bj-editorial-location {
+.bj-run-small {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 4px;
-  margin-bottom: 20px;
-  opacity: 0.7;
+  margin-bottom: 28px;
+  opacity: 0.65;
 }
 
-.bj-editorial-intro h1 {
+.bj-run-different h1 {
   margin: 0;
-  font-size: clamp(54px, 11vw, 145px);
-  line-height: 0.88;
-  letter-spacing: -4px;
+  font-size: clamp(70px, 14vw, 180px);
+  line-height: 0.78;
+  letter-spacing: -5px;
   font-weight: 900;
 }
 
-.bj-editorial-sub {
-  margin-top: 25px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  opacity: 0.75;
+.bj-run-line {
+  width: 100%;
+  height: 1px;
+  background: #444;
+  margin-top: 55px;
 }
 
+/* MOBILE */
 @media (max-width: 700px) {
-  .bj-editorial-intro {
-    padding: 32px 20px 40px;
+
+  .bj-sticky-photo {
+    height: 100vh;
   }
+
+  .bj-sticky-photo img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .bj-run-different {
+    min-height: 100vh;
+    padding: 90px 28px 120px;
+  }
+
+  .bj-run-different h1 {
+    font-size: 19vw;
+    line-height: 0.8;
+    letter-spacing: -3px;
+  }
+
+  .bj-run-small {
+    font-size: 9px;
+    letter-spacing: 3px;
+  }
+}
 
   .bj-editorial-intro h1 {
     font-size: 16vw;
@@ -199,25 +243,22 @@ nav button.active {
 <main>
 
 <section id="home" class="page active">
- <div class="bj-editorial-hero">
+<div class="bj-scroll-story">
 
-  <img
-    src="PXL_20260905_145253234~2.jpg"
-    alt="Blackjack Run Club"
-    class="bj-editorial-photo"
-  >
-
-  <div class="bj-editorial-intro">
-    <div class="bj-editorial-location">
-      CORPUS CHRISTI, TEXAS
-    </div>
-
-    <h1>RUN DIFFERENT.</h1>
-
-    <div class="bj-editorial-sub">
-      BLACKJACK RUN CLUB
-    </div>
+  <div class="bj-sticky-photo">
+    <img
+      src="PXL_20260905_145253234~2.jpg"
+      alt="Blackjack Run Club"
+    >
   </div>
+
+  <div class="bj-run-different">
+    <div class="bj-run-small">BLACKJACK RUN CLUB</div>
+    <h1>RUN<br>DIFFERENT.</h1>
+    <div class="bj-run-line"></div>
+  </div>
+
+</div>
 
 </div>
 
