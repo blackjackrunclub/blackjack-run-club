@@ -456,24 +456,101 @@ function showPage(pageId, button) {
   });
 });
 
+
 function closePhotoModal() {
-  document.getElementById('photoModal').style.display = 'none';
-}function closePhotoModal() {
   document.getElementById('photoModal').style.display = 'none';
 }
 
-// NEXT RUN CODE GOES HERE
-
 function updateNextRun() {
-   ...
+  const now = new Date();
+
+  function firstTuesday(year, month) {
+    const date = new Date(year, month, 1);
+
+    while (date.getDay() !== 2) {
+      date.setDate(date.getDate() + 1);
+    }
+
+    return date.getDate();
+  }
+
+  const upcomingRuns = [];
+
+  for (let i = 0; i <= 14; i++) {
+    const date = new Date(now);
+    date.setDate(now.getDate() + i);
+    date.setHours(0, 0, 0, 0);
+
+    // Sunday Long Run
+    if (date.getDay() === 0) {
+      const runTime = new Date(date);
+      runTime.setHours(6, 0, 0, 0);
+
+      if (runTime > now) {
+        upcomingRuns.push({
+          date: runTime,
+          name: "SUNDAY LONG RUN",
+          time: "6:00 AM",
+          location: "Art Museum of South Texas"
+        });
+      }
+    }
+
+    // Tuesday Runs
+    if (date.getDay() === 2) {
+      const runTime = new Date(date);
+      runTime.setHours(18, 0, 0, 0);
+
+      if (runTime > now) {
+        const isTrackTuesday =
+          date.getDate() === firstTuesday(
+            date.getFullYear(),
+            date.getMonth()
+          );
+
+        upcomingRuns.push({
+          date: runTime,
+          name: isTrackTuesday
+            ? "TRACK TUESDAY"
+            : "PEOPLES ST SOCIAL",
+          time: "6:00 PM",
+          location: isTrackTuesday
+            ? "Baker Middle School"
+            : "Peoples St. T-Head"
+        });
+      }
+    }
+  }
+
+  upcomingRuns.sort(function(a, b) {
+    return a.date - b.date;
+  });
+
+  const nextRun = upcomingRuns[0];
+
+  if (!nextRun) {
+    return;
+  }
+
+  const dateText = nextRun.date.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric"
+  });
+
+  document.getElementById("nextRunName").textContent =
+    nextRun.name;
+
+  document.getElementById("nextRunDetails").innerHTML =
+    dateText + "<br>" +
+    nextRun.time + "<br>" +
+    nextRun.location;
 }
 
 updateNextRun();
-
+  
 </script>
 
-<div id="photoModal"
-</script>
 <div id="photoModal"
      onclick="closePhotoModal()"
      style="
