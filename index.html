@@ -580,8 +580,33 @@ function updateNextRun() {
   document.getElementById("nextRunName").textContent =
     nextRun.name;
   
-document.getElementById("checkinRunName").textContent =
-  nextRun.name;
+const checkinRunName = document.getElementById("checkinRunName");
+const checkinLabel = checkinRunName
+  .closest(".card")
+  .querySelector(".label");
+
+const today = new Date();
+const todayDay = today.getDay();
+
+if (todayDay === 0) {
+  checkinLabel.textContent = "TODAY'S RUN";
+  checkinRunName.textContent = "SUNDAY LONG RUN";
+}
+
+else if (todayDay === 2) {
+  checkinLabel.textContent = "TODAY'S RUN";
+
+  if (today.getDate() <= 7) {
+    checkinRunName.textContent = "TRACK TUESDAY";
+  } else {
+    checkinRunName.textContent = "PEOPLES ST SOCIAL";
+  }
+}
+
+else {
+  checkinLabel.textContent = "NO RUN TODAY";
+  checkinRunName.textContent = "NEXT: " + nextRun.name;
+}
   
   document.getElementById("nextRunDetails").innerHTML =
     dateText + "<br>" +
