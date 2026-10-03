@@ -414,7 +414,22 @@ nav button.active {
       Bet On Yourself.<br>
       The Streets Are Free.
     </div>
+  </div><div id="installBlackjackCard" class="card">
+  <div class="label">Blackjack Mobile</div>
+  <div class="next-run">INSTALL BLACKJACK</div>
+
+  <div id="installInstructions" class="details">
+    Put Blackjack on your Home Screen.<br>
+    Runs. Events. Roll Call. Safety.<br>
+    One tap away.
   </div>
+
+  <button id="installBlackjackButton"
+          onclick="installBlackjack()"
+          style="margin-top:15px;">
+    INSTALL APP
+  </button>
+</div>
 </section>
 
 </main>
@@ -814,7 +829,84 @@ if (finishedRunners.length > 0) {
 loadRollCall();
   
 updateNextRun();
-  
+
+  let deferredInstallPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+
+  const button = document.getElementById("installBlackjackButton");
+
+  if (button) {
+    button.style.display = "inline-block";
+  }
+});
+
+function isBlackjackInstalled() {
+  return window.matchMedia("(display-mode: standalone)").matches ||
+         window.navigator.standalone === true;
+}
+
+function setupBlackjackInstall() {
+  const card = document.getElementById("installBlackjackCard");
+  const button = document.getElementById("installBlackjackButton");
+  const instructions = document.getElementById("installInstructions");
+
+  if (!card || !button || !instructions) return;
+
+  // Already running as the installed app
+  if (isBlackjackInstalled()) {
+    card.style.display = "none";
+    return;
+  }
+
+  const isIOS =
+    /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  if (isIOS) {
+    button.style.display = "none";
+
+    instructions.innerHTML =
+      "Put Blackjack on your Home Screen.<br><br>" +
+      "Open this site in Safari.<br>" +
+      "Tap the Share button.<br>" +
+      "Choose <strong>Add to Home Screen</strong>.<br>" +
+      "Tap <strong>Add</strong>.";
+  } else {
+    button.style.display = "inline-block";
+  }
+}
+
+async function installBlackjack() {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+
+    const choice = await deferredInstallPrompt.userChoice;
+
+    if (choice.outcome === "accepted") {
+      const card = document.getElementById("installBlackjackCard");
+      if (card) card.style.display = "none";
+    }
+
+    deferredInstallPrompt = null;
+    return;
+  }
+
+  alert(
+    "Use your browser's Install App or Add to Home Screen option to install Blackjack."
+  );
+}
+
+window.addEventListener("appinstalled", () => {
+  const card = document.getElementById("installBlackjackCard");
+
+  if (card) {
+    card.style.display = "none";
+  }
+});
+
+setupBlackjackInstall();
 </script>
 
 <div id="photoModal"
