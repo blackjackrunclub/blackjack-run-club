@@ -425,7 +425,60 @@ function showPage(pageId, button) {
     }
   );
 }
-</script>
+  document.querySelectorAll('#thecut img').forEach(function(img) {
+  img.style.cursor = 'pointer';
 
+  img.addEventListener('click', function() {
+    document.getElementById('photoModalImage').src = this.src;
+    document.getElementById('photoModal').style.display = 'flex';
+  });
+});
+
+function closePhotoModal() {
+  document.getElementById('photoModal').style.display = 'none';
+}
+</script>
+<div id="photoModal"
+     onclick="closePhotoModal()"
+     style="
+       display:none;
+       position:fixed;
+       top:0;
+       left:0;
+       width:100%;
+       height:100%;
+       background:rgba(0,0,0,0.95);
+       z-index:9999;
+       align-items:center;
+       justify-content:center;
+       padding:20px;
+     ">
+
+  <button onclick="closePhotoModal()"
+          style="
+            position:absolute;
+            top:20px;
+            right:20px;
+            background:white;
+            color:black;
+            border:none;
+            font-size:24px;
+            font-weight:bold;
+            padding:8px 14px;
+            cursor:pointer;
+          ">✕</button>
+
+  <img id="photoModalImage"
+       src=""
+       alt="The Cut"
+       onclick="event.stopPropagation()"
+       style="
+         max-width:95%;
+         max-height:90%;
+         width:auto;
+         height:auto;
+         object-fit:contain;
+       ">
+</div>
 </body>
 </html>
