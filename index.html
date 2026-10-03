@@ -537,27 +537,27 @@ nav button.active {
 </main>
 
 <nav>
-  <button class="active" onclick="goToSection('home', this)">
+  <button class="active" onclick="document.getElementById('home').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
     <span class="spade">♠</span>HOME
   </button>
 
- <button onclick="goToSection('runs', this)">
+<button onclick="document.getElementById('runs').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
     <span class="spade">♠</span>RUNS
   </button>
 
-  <button onclick="goToSection('events', this)">
+<button onclick="document.getElementById('events').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
     <span class="spade">♠</span>EVENTS
   </button>
 
-  <button onclick="goToSection('checkin', this)">
+<button onclick="document.getElementById('checkin').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
     <span class="spade">♠</span>CHECK IN
   </button>
   
-<button onclick="goToSection('safety', this)">
+<button onclick="document.getElementById('safety').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
     <span class="spade">♠</span>SAFETY
 </button>
   
-  <button onclick="goToSection('about', this)">
+<button onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
     <span class="spade">♠</span>ABOUT
   </button>
 </nav>
@@ -1067,6 +1067,13 @@ window.addEventListener(
 );
 
 updateBlackjackScrollMotion();
+function setActiveNav(button) {
+  document.querySelectorAll("nav button").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  button.classList.add("active");
+}
 </script>
 
 <div id="photoModal"
