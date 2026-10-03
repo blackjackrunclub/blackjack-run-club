@@ -350,7 +350,7 @@ nav button.active {
       >
     </div>
 
-    <button>CHECK IN</button>
+    <button onclick="checkInRunner()">CHECK IN</button>
   </div>
 
   <div class="card">
@@ -577,13 +577,109 @@ function updateNextRun() {
 
   document.getElementById("nextRunName").textContent =
     nextRun.name;
-
+  
+document.getElementById("checkinRunName").textContent =
+  nextRun.name;
+  
   document.getElementById("nextRunDetails").innerHTML =
     dateText + "<br>" +
     nextRun.time + "<br>" +
     nextRun.location;
 }
+const ROLL_CALL_API =
+  "https://blackjack-roll-call.josetcano.workers.dev";
 
+async function checkInRunner() {
+  const nameInput = document.getElementById("runnerName");
+  const runnerName = nameInput.value.trim();
+
+  if (!runnerName) {
+    alert("Enter your first name or nickname.");
+    return;
+  }
+
+  // Use today's local date for the roll call
+  const today = new Date();
+  const runDate =
+    today.getFullYear() + "-" +
+    String(today.getMonth() + 1).padStart(2, "0") + "-" +
+    String(today.getDate()).padStart(2, "0");
+
+  // Use the automatically calculated run name
+  const runName =
+    document.getElementById("nextRunName").textContent.trim();
+
+  try {
+    const response = await fetch(ROLL_CALL_API + "/checkin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        runnerName: runnerName,
+        runDate: runDate,
+        runName: runName
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Check in failed.");
+    }
+
+    nameInput.value = "";
+
+    alert("YOU'RE CHECKED IN.");
+
+    loadRollCall();
+
+  } catch (error) {
+    console.error(error);
+    alert("Unable to check in. Try again.");
+  }
+}
+
+async function loadRollCall() {
+  const today = new Date();
+  const runDate =
+    today.getFullYear() + "-" +
+    String(today.getMonth() + 1).padStart(2, "0") + "-" +
+    String(today.getDate()).padStart(2, "0");
+
+  try {
+    const response = await fetch(
+      ROLL_CALL_API + "/checkins?date=" +
+      encodeURIComponent(runDate)
+    );
+
+    const data = await response.json();
+    const checkins = data.checkins || [];
+
+    const finished = checkins.filter(
+      runner => runner.status === "FINISHED"
+    ).length;
+
+    const stillOut = checkins.filter(
+      runner => runner.status === "OUT"
+    ).length;
+
+    document.getElementById("checkedInCount").textContent =
+      checkins.length;
+
+    document.getElementById("finishedCount").textContent =
+      finished;
+
+    document.getElementById("stillOutCount").textContent =
+      stillOut;
+
+  } catch (error) {
+    console.error("Unable to load roll call:", error);
+  }
+}
+
+loadRollCall();
+  
 updateNextRun();
   
 </script>
