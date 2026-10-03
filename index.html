@@ -70,7 +70,7 @@
 
 .scroll-reveal {
   opacity: 0;
-  transform: translateY(55px);
+  transform: translateY(120px);
   transition:
     opacity 0.9s ease,
     transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1038,8 +1038,8 @@ function updateBlackjackScrollMotion() {
     const clampedProgress = Math.max(0, Math.min(1, progress));
 
     // Very subtle movement — keeps the entire photo intact.
-    const scale = 1 + clampedProgress * 0.035;
-    const moveY = (clampedProgress - 0.5) * 12;
+   const scale = 1 + clampedProgress * 0.12;
+const moveY = (clampedProgress - 0.5) * 50;
 
     blackjackPhoto.style.transform =
       `translateY(${moveY}px) scale(${scale})`;
