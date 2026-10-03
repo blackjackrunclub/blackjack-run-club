@@ -140,7 +140,16 @@ nav button.active {
 <section id="home" class="page active">
   <img src="DSC04519.jpg" alt="Blackjack Run Club" style="width:100%; height:auto; display:block; margin-bottom:30px;">
   <div class="card">
-    <div class="label">Next Run</div>
+  <div class="label">Next Run</div>
+
+  <div id="nextRunName" class="next-run">
+    Loading next run...
+  </div>
+
+  <div id="nextRunDetails" class="details">
+    Checking the Blackjack schedule...
+  </div>
+</div>
     <div class="next-run">Sunday Long Run</div>
     <div class="details">
       6:00 AM<br>
@@ -449,7 +458,21 @@ function showPage(pageId, button) {
 
 function closePhotoModal() {
   document.getElementById('photoModal').style.display = 'none';
+}function closePhotoModal() {
+  document.getElementById('photoModal').style.display = 'none';
 }
+
+// NEXT RUN CODE GOES HERE
+
+function updateNextRun() {
+   ...
+}
+
+updateNextRun();
+
+</script>
+
+<div id="photoModal"
 </script>
 <div id="photoModal"
      onclick="closePhotoModal()"
