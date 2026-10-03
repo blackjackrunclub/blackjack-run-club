@@ -316,14 +316,52 @@ nav button.active {
   <button onclick="showPage('events')">BACK TO EVENTS</button>
 </section>
   
-  <section id="checkin" class="page">
-  <div class="label">Roll Call</div>
+ <section id="checkin" class="page">
+  <div class="label">Blackjack Roll Call</div>
   <h2>CHECK IN</h2>
 
   <div class="card">
-    <div class="next-run">I'M HERE.</div>
+    <div class="label">TODAY'S RUN</div>
+    <div id="checkinRunName" class="next-run">BLACKJACK RUN</div>
+
     <div class="details">
-      Attendance tracking will be added next.
+      Check in when you arrive.<br>
+      Mark yourself finished when you're back.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">RUNNER</div>
+    <div class="next-run">I'M HERE.</div>
+
+    <div class="details">
+      <input
+        id="runnerName"
+        type="text"
+        placeholder="First name or nickname"
+        maxlength="30"
+        style="
+          width:100%;
+          padding:16px;
+          font-size:18px;
+          margin:10px 0 20px 0;
+          box-sizing:border-box;
+        "
+      >
+    </div>
+
+    <button>CHECK IN</button>
+  </div>
+
+  <div class="card">
+    <div class="label">ROLL CALL</div>
+    <div class="next-run">
+      <span id="checkedInCount">0</span> RUNNERS CHECKED IN
+    </div>
+
+    <div class="details">
+      <span id="finishedCount">0</span> FINISHED •
+      <span id="stillOutCount">0</span> STILL OUT
     </div>
   </div>
 </section>
