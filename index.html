@@ -179,11 +179,8 @@ button {
 }
 
 .page {
-  display: none;
-}
-
-.page.active {
   display: block;
+  scroll-margin-top: 20px;
 }
 
 nav {
@@ -240,15 +237,7 @@ nav button.active {
   >
 
   <div class="bj-editorial-intro">
-    <div class="bj-editorial-location">
-      CORPUS CHRISTI, TEXAS
-    </div>
-
    <h1 class="scroll-reveal">RUN DIFFERENT.</h1>
-
-    <div class="bj-editorial-sub">
-      BLACKJACK RUN CLUB
-    </div>
   </div>
 
 </div>
@@ -575,19 +564,23 @@ nav button.active {
 
 <script>
 function showPage(pageId, button) {
-  document.querySelectorAll('.page').forEach(page => {
-    page.classList.remove('active');
-  });
+  const section = document.getElementById(pageId);
 
-  document.getElementById(pageId).classList.add('active');
+  if (section) {
+    section.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
 
   if (button) {
-    document.querySelectorAll('nav button').forEach(btn => {
-      btn.classList.remove('active');
+    document.querySelectorAll("nav button").forEach(btn => {
+      btn.classList.remove("active");
     });
 
-    button.classList.add('active');
+    button.classList.add("active");
   }
+}
 
   window.scrollTo(0, 0);
 }function getRunnerLocation(reason) {
