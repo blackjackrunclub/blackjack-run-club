@@ -9,6 +9,7 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Blackjack">
   
@@ -142,6 +143,36 @@
   line-height: 0.82;
   letter-spacing: -5px;
   font-weight: 900;
+}
+
+/* EDITORIAL SECTION INTROS */
+
+.section-heading {
+  padding: 90px 0 55px;
+}
+
+.section-heading .label {
+  margin-bottom: 12px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: clamp(58px, 16vw, 140px);
+  line-height: 0.84;
+  letter-spacing: -5px;
+  font-weight: 900;
+}
+
+@media (max-width: 700px) {
+  .runs-heading,
+  .section-heading {
+    padding: 72px 0 42px;
+  }
+
+  .runs-heading h2,
+  .section-heading h2 {
+    letter-spacing: -3px;
+  }
 }
 body {
   margin: 0;
@@ -318,7 +349,7 @@ nav button.active {
 
   <br>
 
-  <button onclick="showPage('events')">VIEW EVENT</button>
+  <button onclick="goToSection('events')">VIEW EVENT</button>
 </div>
 </section>
 
@@ -347,7 +378,7 @@ nav button.active {
     </div>
   </div>
 
-  <div class="card">
+  <div class="card scroll-card">
     <div class="next-run">PEOPLES ST SOCIAL</div>
     <div class="details">
       All remaining Tuesdays<br>
@@ -358,10 +389,12 @@ nav button.active {
 </section>
 
 <section id="events" class="page">
-  <div class="label">Blackjack Originals</div>
-  <h2>EVENTS</h2>
+  <div class="section-heading scroll-reveal">
+    <div class="label">Blackjack Originals</div>
+    <h2>EVENTS</h2>
+  </div>
 
-  <div class="card">
+  <div class="card scroll-card">
     <div class="label">UPCOMING EVENT</div>
     <div class="next-run">DURUS SIM</div>
 
@@ -381,7 +414,7 @@ nav button.active {
     </div>
   </div>
 
- <div class="card">
+ <div class="card scroll-card">
   <div class="label">PAST EVENT</div>
   <div class="next-run">THE CUT</div>
 
@@ -391,15 +424,17 @@ nav button.active {
     WE RAN TOGETHER.
   </div>
 
-  <button onclick="showPage('thecut')">VIEW RECAP</button>
+  <button onclick="goToSection('thecut')">VIEW RECAP</button>
 </div>
 </section>
 
 <section id="thecut" class="page">
-  <div class="label">Blackjack Original</div>
-  <h2>THE CUT</h2>
+  <div class="section-heading scroll-reveal">
+    <div class="label">Blackjack Original</div>
+    <h2>THE CUT</h2>
+  </div>
 
-  <div class="card">
+  <div class="card scroll-card">
     <div class="label">ALLEYWAY SHOWDOWN • 2026</div>
 
     <div class="next-run">
@@ -414,7 +449,7 @@ nav button.active {
     </div>
   </div>
 
- <div class="card">
+ <div class="card scroll-card">
   <div class="label">THE CUT • GALLERY</div>
 
   <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:20px;">
@@ -446,7 +481,7 @@ nav button.active {
 
   </div>
 </div>
-<div class="card">
+<div class="card scroll-card">
   <div class="label">THE CUT • VIDEO</div>
   <div class="next-run">WATCH THE SHOWDOWN</div>
 
@@ -460,14 +495,16 @@ nav button.active {
     <button>WATCH THE CUT</button>
   </a>
 </div>
-  <button onclick="showPage('events')">BACK TO EVENTS</button>
+  <button onclick="goToSection('events')">BACK TO EVENTS</button>
 </section>
   
  <section id="checkin" class="page">
-  <div class="label">Blackjack Roll Call</div>
-  <h2>CHECK IN</h2>
+  <div class="section-heading scroll-reveal">
+    <div class="label">Blackjack Roll Call</div>
+    <h2>CHECK IN</h2>
+  </div>
 
-  <div class="card">
+  <div class="card scroll-card">
     <div class="label">TODAY'S RUN</div>
     <div id="checkinRunName" class="next-run">BLACKJACK RUN</div>
 
@@ -477,7 +514,7 @@ nav button.active {
     </div>
   </div>
 
-  <div class="card">
+  <div class="card scroll-card">
     <div class="label">RUNNER</div>
     <div class="next-run">I'M HERE.</div>
 
@@ -500,7 +537,7 @@ nav button.active {
     <button onclick="checkInRunner()">CHECK IN</button>
   </div>
 
-  <div class="card">
+  <div class="card scroll-card">
     <div class="label">ROLL CALL</div>
     <div class="next-run">
       <span id="checkedInCount">0</span> RUNNERS CHECKED IN
@@ -517,10 +554,12 @@ nav button.active {
 
 <section id="safety" class="page">
 
-  <div class="label">Runner Safety</div>
-  <h2>NEED HELP?</h2>
+  <div class="section-heading scroll-reveal">
+    <div class="label">Runner Safety</div>
+    <h2>NEED HELP?</h2>
+  </div>
 
-<div class="card">
+<div class="card scroll-card">
   <div class="next-run">NEED ASSISTANCE</div>
 
   <div class="details">
@@ -534,7 +573,7 @@ nav button.active {
   <button onclick="getRunnerLocation('FEEL UNSAFE')">FEEL UNSAFE</button>
 </div>
 
-  <div class="card">
+  <div class="card scroll-card">
     <div class="next-run">EMERGENCY</div>
     <div class="details">
       Immediate danger or medical emergency.
@@ -545,10 +584,12 @@ nav button.active {
 
 </section>
   <section id="about" class="page">
-  <div class="label">More Than A Run Club</div>
-  <h2>BLACKJACK</h2>
+  <div class="section-heading scroll-reveal">
+    <div class="label">More Than A Run Club</div>
+    <h2>BLACKJACK</h2>
+  </div>
 
-  <div class="card">
+  <div class="card scroll-card">
     <div class="next-run">RUN DIFFERENT.</div>
     <div class="details">
       Corpus Christi, Texas<br><br>
@@ -556,7 +597,9 @@ nav button.active {
       Bet On Yourself.<br>
       The Streets Are Free.
     </div>
-  </div><div id="installBlackjackCard" class="card">
+  </div>
+
+<div id="installBlackjackCard" class="card scroll-card">
   <div class="label">Blackjack Mobile</div>
   <div class="next-run">INSTALL BLACKJACK</div>
 
@@ -581,23 +624,23 @@ nav button.active {
     <span class="spade">♠</span>HOME
   </button>
 
-<button onclick="document.getElementById('runs').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
+<button onclick="goToSection('runs', this);">
     <span class="spade">♠</span>RUNS
   </button>
 
-<button onclick="document.getElementById('events').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
+<button onclick="goToSection('events', this);">
     <span class="spade">♠</span>EVENTS
   </button>
 
-<button onclick="document.getElementById('checkin').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
+<button onclick="goToSection('checkin', this);">
     <span class="spade">♠</span>CHECK IN
   </button>
   
-<button onclick="document.getElementById('safety').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
+<button onclick="goToSection('safety', this);">
     <span class="spade">♠</span>SAFETY
 </button>
   
-<button onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
+<button onclick="goToSection('about', this);">
     <span class="spade">♠</span>ABOUT
   </button>
 </nav>
@@ -1100,30 +1143,24 @@ scrollCards.forEach((card) => {
   card.classList.remove("is-visible");
 });
 
-let cardRevealArmed = false;
-let lastScrollY = window.scrollY;
-
-window.addEventListener("scroll", () => {
-  const currentScrollY = window.scrollY;
-
-  if (currentScrollY > lastScrollY && currentScrollY > 20) {
-    cardRevealArmed = true;
+const cardRevealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        cardRevealObserver.unobserve(entry.target);
+      }
+    });
+  },
+  {
+    threshold: 0.08,
+    rootMargin: "0px 0px -8% 0px"
   }
+);
 
-  lastScrollY = currentScrollY;
-
-  if (!cardRevealArmed) return;
-
-  const triggerPoint = window.innerHeight * 0.90;
-
-  scrollCards.forEach((card) => {
-    const cardTop = card.getBoundingClientRect().top;
-
-    if (cardTop < triggerPoint) {
-      card.classList.add("is-visible");
-    }
-  });
-}, { passive: true });
+scrollCards.forEach((card) => {
+  cardRevealObserver.observe(card);
+});
 
 window.addEventListener(
   "scroll",
