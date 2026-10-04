@@ -104,7 +104,28 @@
     letter-spacing: 3px;
   }
 }
+/* CARD SCROLL REVEAL */
 
+.scroll-card {
+  opacity: 0;
+  transform: translateY(70px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
 body {
   margin: 0;
   background: #090a0c;
@@ -246,7 +267,7 @@ nav button.active {
     SCROLL ↓
   </div>
 </div>
-  <div class="card">
+  <div class="card scroll-card">
   <div class="label">Next Run</div>
 
   <div id="nextRunName" class="next-run">
@@ -1054,7 +1075,11 @@ const blackjackRevealObserver = new IntersectionObserver(
 revealElements.forEach((element) => {
   blackjackRevealObserver.observe(element);
 });
+const scrollCards = document.querySelectorAll(".scroll-card");
 
+scrollCards.forEach((card) => {
+  blackjackRevealObserver.observe(card);
+});
 window.addEventListener(
   "scroll",
   updateBlackjackScrollMotion,
