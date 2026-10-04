@@ -1081,8 +1081,25 @@ revealElements.forEach((element) => {
 });
 const scrollCards = document.querySelectorAll(".scroll-card");
 
-function revealScrollCards() {
-  const triggerPoint = window.innerHeight * 0.65;
+scrollCards.forEach((card) => {
+  card.classList.remove("is-visible");
+});
+
+let cardRevealArmed = false;
+let lastScrollY = window.scrollY;
+
+window.addEventListener("scroll", () => {
+  const currentScrollY = window.scrollY;
+
+  if (currentScrollY > lastScrollY && currentScrollY > 20) {
+    cardRevealArmed = true;
+  }
+
+  lastScrollY = currentScrollY;
+
+  if (!cardRevealArmed) return;
+
+  const triggerPoint = window.innerHeight * 0.70;
 
   scrollCards.forEach((card) => {
     const cardTop = card.getBoundingClientRect().top;
@@ -1091,11 +1108,7 @@ function revealScrollCards() {
       card.classList.add("is-visible");
     }
   });
-}
-
-window.addEventListener("scroll", revealScrollCards, {
-  passive: true
-});
+}, { passive: true });
 
 window.addEventListener(
   "scroll",
