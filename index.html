@@ -208,17 +208,7 @@ nav button {
 nav button.active {
   color: white;
 }
-nav button.active .spade {
-  color: white;
-}
 
-nav button:not(.active) {
-  color: #999;
-}
-
-nav button:not(.active) .spade {
-  color: #999;
-}
 .spade {
   font-size: 26px;
   display: block;
@@ -547,11 +537,11 @@ nav button:not(.active) .spade {
 </main>
 
 <nav>
-<button class="active" data-section="home" onclick="document.getElementById('home').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
+  <button class="active" onclick="document.getElementById('home').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
     <span class="spade">♠</span>HOME
   </button>
 
-<button data-section="runs" onclick="document.getElementById('runs').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
+<button onclick="document.getElementById('runs').scrollIntoView({behavior:'smooth'}); setActiveNav(this);">
     <span class="spade">♠</span>RUNS
   </button>
 
@@ -1084,40 +1074,6 @@ function setActiveNav(button) {
 
   button.classList.add("active");
 }
-  const navSections = ["home", "runs", "events", "checkin", "safety", "about"];
-
-function updateActiveNavOnScroll() {
-  const marker = window.innerHeight * 0.35;
-  let currentSection = "home";
-
-  navSections.forEach(sectionId => {
-    const section = document.getElementById(sectionId);
-
-    if (section) {
-      const rect = section.getBoundingClientRect();
-
-      if (rect.top <= marker) {
-        currentSection = sectionId;
-      }
-    }
-  });
-
-  document.querySelectorAll("nav button").forEach(button => {
-    button.classList.remove("active");
-
-   if (button.dataset.section === currentSection) {
-  button.classList.add("active");
-}
-  });
-}
-
-window.addEventListener("scroll", updateActiveNavOnScroll, {
-  passive: true
-});
-
-window.addEventListener("resize", updateActiveNavOnScroll);
-
-updateActiveNavOnScroll();
 </script>
 
 <div id="photoModal"
