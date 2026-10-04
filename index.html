@@ -126,6 +126,23 @@
     transition: none;
   }
 }
+  /* RUNS SECTION INTRO */
+
+.runs-heading {
+  padding: 90px 0 55px;
+}
+
+.runs-heading .label {
+  margin-bottom: 12px;
+}
+
+.runs-heading h2 {
+  margin: 0;
+  font-size: clamp(64px, 18vw, 150px);
+  line-height: 0.82;
+  letter-spacing: -5px;
+  font-weight: 900;
+}
 body {
   margin: 0;
   background: #090a0c;
@@ -306,10 +323,12 @@ nav button.active {
 </section>
 
 <section id="runs" class="page">
+ <div class="runs-heading scroll-reveal">
   <div class="label">Weekly Runs</div>
   <h2>RUNS</h2>
+</div>
 
-  <div class="card">
+<div class="card scroll-card">
     <div class="next-run">SUNDAY LONG RUN</div>
     <div class="details">
       Every Sunday<br>
@@ -319,7 +338,7 @@ nav button.active {
     </div>
   </div>
 
-  <div class="card">
+  <div class="card scroll-card">
     <div class="next-run">TRACK TUESDAY</div>
     <div class="details">
       First Tuesday of each month<br>
