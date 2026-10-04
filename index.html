@@ -1082,7 +1082,7 @@ revealElements.forEach((element) => {
 const scrollCards = document.querySelectorAll(".scroll-card");
 
 function revealScrollCards() {
-  const triggerPoint = window.innerHeight * 0.25;
+  const triggerPoint = window.innerHeight * 0.65;
 
   scrollCards.forEach((card) => {
     const cardTop = card.getBoundingClientRect().top;
@@ -1097,7 +1097,6 @@ window.addEventListener("scroll", revealScrollCards, {
   passive: true
 });
 
-revealScrollCards();
 window.addEventListener(
   "scroll",
   updateBlackjackScrollMotion,
