@@ -425,7 +425,7 @@ nav button.active {
 }
 
 #liveRunBoard .live-run-stats {
-  display: grid !important;
+  display: grid;
   grid-template-columns: repeat(3, 1fr);
 }
 
@@ -1138,6 +1138,53 @@ else {
 const ROLL_CALL_API =
   "https://blackjack-roll-call.josetcano.workers.dev";
 
+function getLocalRunDate(date = new Date()) {
+  return date.getFullYear() + "-" +
+    String(date.getMonth() + 1).padStart(2, "0") + "-" +
+    String(date.getDate()).padStart(2, "0");
+}
+
+function getRunForDate(date) {
+  const day = date.getDay();
+
+  if (day === 0) {
+    return {
+      name: "SUNDAY LONG RUN",
+      details: "ART MUSEUM OF SOUTH TEXAS · 6:00 AM"
+    };
+  }
+
+  if (day === 2) {
+    const isTrackTuesday = date.getDate() <= 7;
+    return {
+      name: isTrackTuesday ? "TRACK TUESDAY" : "PEOPLES ST SOCIAL",
+      details: isTrackTuesday
+        ? "BAKER MIDDLE SCHOOL · 6:00 PM"
+        : "PEOPLE'S ST. T-HEAD · 6:00 PM"
+    };
+  }
+
+  return null;
+}
+
+function getNextBlackjackRun(fromDate = new Date()) {
+  for (let i = 1; i <= 7; i++) {
+    const nextDate = new Date(fromDate);
+    nextDate.setDate(fromDate.getDate() + i);
+    const run = getRunForDate(nextDate);
+
+    if (run) {
+      return {
+        ...run,
+        daysAway: i,
+        date: nextDate
+      };
+    }
+  }
+
+  return null;
+}
+
 async function checkInRunner() {
   const nameInput = document.getElementById("runnerName");
   const runnerName = nameInput.value.trim();
@@ -1147,188 +1194,192 @@ async function checkInRunner() {
     return;
   }
 
- // LIVE RUN / NEXT RUN MODE
-const today = new Date();
-const day = today.getDay();
-const date = today.getDate();
+  const today = new Date();
+  const run = getRunForDate(today);
 
-const liveRunLabel = document.getElementById("liveRunLabel");
-const liveRunNameEl = document.getElementById("liveRunName");
-const liveRunDetailsEl = document.getElementById("liveRunDetails");
-const liveRunStats = document.getElementById("liveRunStats");
-  
-let liveRunName = "";
-let liveRunDetails = "";
-
-if (day === 0) {
-liveRunStats.style.display = "grid";
-liveStatus.style.display = "block";
-  
-  // SUNDAY — LIVE MODE
-  liveRunLabel.textContent = "LIVE RUN BOARD";
-  liveRunName = "SUNDAY LONG RUN";
-  liveRunDetails = "ART MUSEUM OF SOUTH TEXAS · 6:00 AM";
-
-} else if (day === 2) {
-liveRunStats.style.display = "grid";
-liveStatus.style.display = "block";
-  
-  // TUESDAY — LIVE MODE
-  liveRunLabel.textContent = "LIVE RUN BOARD";
-
-  if (date <= 7) {
-    liveRunName = "TRACK TUESDAY";
-    liveRunDetails = "BAKER MIDDLE SCHOOL · 6:00 PM";
-  } else {
-    liveRunName = "PEOPLE'S ST SOCIAL";
-    liveRunDetails = "T-HEAD · 6:00 PM";
+  if (!run) {
+    alert("Regular Blackjack check-in is only available on Sundays and Tuesdays.");
+    return;
   }
 
-} else {
+  try {
+    const response = await fetch(ROLL_CALL_API + "/checkin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        runnerName: runnerName,
+        runDate: getLocalRunDate(today),
+        runName: run.name
+      })
+    });
 
-  // NO RUN TODAY — NEXT RUN MODE
-  liveRunStats.style.display = "none";
-liveStatus.style.display = "none";
-  liveRunLabel.textContent = "NEXT RUN";
+    const data = await response.json();
 
-  const upcoming = [];
-
-  for (let i = 1; i <= 7; i++) {
-
-    const nextDate = new Date(today);
-    nextDate.setDate(today.getDate() + i);
-
-    const nextDay = nextDate.getDay();
-
-    if (nextDay === 0) {
-      upcoming.push({
-        daysAway: i,
-        name: "SUNDAY LONG RUN",
-        details: "ART MUSEUM OF SOUTH TEXAS · 6:00 AM"
-      });
+    if (!response.ok) {
+      throw new Error(data.error || "Check in failed.");
     }
 
-    if (nextDay === 2) {
+    nameInput.value = "";
+    alert("YOU'RE CHECKED IN.");
+    await loadRollCall();
 
-      const firstTuesday = nextDate.getDate() <= 7;
-
-      upcoming.push({
-        daysAway: i,
-        name: firstTuesday
-          ? "TRACK TUESDAY"
-          : "PEOPLE'S ST SOCIAL",
-        details: firstTuesday
-          ? "BAKER MIDDLE SCHOOL · 6:00 PM"
-          : "T-HEAD · 6:00 PM"
-      });
-    }
+  } catch (error) {
+    console.error(error);
+    alert("Unable to check in. Try again.");
   }
-
-  upcoming.sort((a, b) => a.daysAway - b.daysAway);
-
-  const nextRun = upcoming[0];
-
-  liveRunName = nextRun.name;
-
-  const countdown =
-    nextRun.daysAway === 1
-      ? "TOMORROW"
-      : nextRun.daysAway + " DAYS AWAY";
-
-  liveRunDetails =
-    nextRun.details + " · " + countdown;
 }
 
-liveRunNameEl.textContent = liveRunName;
-liveRunDetailsEl.textContent = liveRunDetails;
-  liveCheckedIn.textContent = checkins.length;
-  liveFinished.textContent = finished;
-  liveStillOut.textContent = stillOut;
+function updateLiveRunBoard(checkins, finished, stillOut) {
+  const liveBoard = document.getElementById("liveRunBoard");
+  const liveRunLabel = document.getElementById("liveRunLabel");
+  const liveRunName = document.getElementById("liveRunName");
+  const liveRunDetails = document.getElementById("liveRunDetails");
+  const liveRunStats = document.getElementById("liveRunStats");
+  const liveCheckedIn = document.getElementById("liveCheckedIn");
+  const liveFinished = document.getElementById("liveFinished");
+  const liveStillOut = document.getElementById("liveStillOut");
+  const liveStatus = document.getElementById("liveRunStatus");
+
+  if (!liveBoard) return;
+
+  const today = new Date();
+  const todaysRun = getRunForDate(today);
 
   liveBoard.classList.remove("all-back");
 
-  if (checkins.length === 0) {
-    liveStatus.textContent = "WAITING FOR RUNNERS";
-  } else if (stillOut > 0) {
-    liveStatus.textContent =
-      stillOut === 1
+  if (todaysRun) {
+    liveRunLabel.textContent = "LIVE RUN BOARD";
+    liveRunName.textContent = todaysRun.name;
+    liveRunDetails.textContent = todaysRun.details;
+    liveRunStats.style.display = "grid";
+    liveStatus.style.display = "block";
+
+    liveCheckedIn.textContent = checkins.length;
+    liveFinished.textContent = finished;
+    liveStillOut.textContent = stillOut;
+
+    if (checkins.length === 0) {
+      liveStatus.textContent = "WAITING FOR RUNNERS";
+    } else if (stillOut > 0) {
+      liveStatus.textContent = stillOut === 1
         ? "1 RUNNER STILL OUT"
         : stillOut + " RUNNERS STILL OUT";
+    } else {
+      liveStatus.textContent = "ALL RUNNERS ACCOUNTED FOR. ♠";
+      liveBoard.classList.add("all-back");
+    }
+
+    return;
+  }
+
+  const nextRun = getNextBlackjackRun(today);
+  liveRunLabel.textContent = "NEXT RUN";
+  liveRunStats.style.display = "none";
+  liveStatus.style.display = "none";
+
+  if (nextRun) {
+    liveRunName.textContent = nextRun.name;
+    const countdown = nextRun.daysAway === 1
+      ? "TOMORROW"
+      : nextRun.daysAway + " DAYS AWAY";
+    liveRunDetails.textContent = nextRun.details + " · " + countdown;
   } else {
-    liveStatus.textContent = "ALL RUNNERS ACCOUNTED FOR. ♠";
-    liveBoard.classList.add("all-back");
+    liveRunName.textContent = "BLACKJACK RUN";
+    liveRunDetails.textContent = "CHECK BACK FOR THE NEXT RUN";
   }
 }
 
-const runnerList = document.getElementById("runnerList");
+async function loadRollCall() {
+  const today = new Date();
+  const runDate = getLocalRunDate(today);
 
-runnerList.innerHTML = "";
+  try {
+    const response = await fetch(
+      ROLL_CALL_API + "/checkins?date=" + encodeURIComponent(runDate)
+    );
 
-const stillOutRunners = checkins.filter(
-  runner => runner.status === "OUT"
-);
+    const data = await response.json();
 
-const finishedRunners = checkins.filter(
-  runner => runner.status === "FINISHED"
-);
+    if (!response.ok) {
+      throw new Error(data.error || "Unable to load roll call.");
+    }
 
-// STILL OUT runners first
-if (stillOutRunners.length > 0) {
-  const outHeading = document.createElement("div");
-  outHeading.innerHTML = "<strong>STILL OUT</strong>";
-  outHeading.style.margin = "20px 0 5px 0";
-  runnerList.appendChild(outHeading);
+    const checkins = data.checkins || [];
+    const finished = checkins.filter(
+      runner => runner.status === "FINISHED"
+    ).length;
+    const stillOut = checkins.filter(
+      runner => runner.status === "OUT"
+    ).length;
 
-  stillOutRunners.forEach(runner => {
-    const runnerRow = document.createElement("div");
+    document.getElementById("checkedInCount").textContent = checkins.length;
+    document.getElementById("finishedCount").textContent = finished;
+    document.getElementById("stillOutCount").textContent = stillOut;
 
-    runnerRow.style.padding = "15px 0";
-    runnerRow.style.borderTop = "1px solid #333";
+    updateLiveRunBoard(checkins, finished, stillOut);
 
-    runnerRow.innerHTML =
-      "<strong>" + runner.runner_name + "</strong><br>" +
-      "<span>STILL OUT</span><br><br>" +
-      '<button onclick="finishRunner(' + runner.id + ')">' +
-      "I'M FINISHED" +
-      "</button>";
+    const runnerList = document.getElementById("runnerList");
+    runnerList.innerHTML = "";
 
-    runnerList.appendChild(runnerRow);
-  });
-}
+    const stillOutRunners = checkins.filter(
+      runner => runner.status === "OUT"
+    );
+    const finishedRunners = checkins.filter(
+      runner => runner.status === "FINISHED"
+    );
 
-// FINISHED runners underneath
-if (finishedRunners.length > 0) {
-  const finishedHeading = document.createElement("div");
-  finishedHeading.innerHTML = "<strong>FINISHED ✓</strong>";
-  finishedHeading.style.margin = "25px 0 5px 0";
-  runnerList.appendChild(finishedHeading);
+    if (stillOutRunners.length > 0) {
+      const outHeading = document.createElement("div");
+      outHeading.innerHTML = "<strong>STILL OUT</strong>";
+      outHeading.style.margin = "20px 0 5px 0";
+      runnerList.appendChild(outHeading);
 
-  finishedRunners.forEach(runner => {
-    const runnerRow = document.createElement("div");
+      stillOutRunners.forEach(runner => {
+        const runnerRow = document.createElement("div");
+        runnerRow.style.padding = "15px 0";
+        runnerRow.style.borderTop = "1px solid #333";
+        runnerRow.innerHTML =
+          "<strong>" + runner.runner_name + "</strong><br>" +
+          "<span>STILL OUT</span><br><br>" +
+          '<button onclick="finishRunner(' + runner.id + ')">' +
+          "I'M FINISHED" +
+          "</button>";
+        runnerList.appendChild(runnerRow);
+      });
+    }
 
-    runnerRow.style.padding = "12px 0";
-    runnerRow.style.borderTop = "1px solid #333";
+    if (finishedRunners.length > 0) {
+      const finishedHeading = document.createElement("div");
+      finishedHeading.innerHTML = "<strong>FINISHED ✓</strong>";
+      finishedHeading.style.margin = "25px 0 5px 0";
+      runnerList.appendChild(finishedHeading);
 
-    runnerRow.innerHTML =
-      "<strong>" + runner.runner_name + "</strong> — FINISHED ✓";
-
-    runnerList.appendChild(runnerRow);
-  });
-}
+      finishedRunners.forEach(runner => {
+        const runnerRow = document.createElement("div");
+        runnerRow.style.padding = "12px 0";
+        runnerRow.style.borderTop = "1px solid #333";
+        runnerRow.innerHTML =
+          "<strong>" + runner.runner_name + "</strong> — FINISHED ✓";
+        runnerList.appendChild(runnerRow);
+      });
+    }
 
   } catch (error) {
     console.error("Unable to load roll call:", error);
+    updateLiveRunBoard([], 0, 0);
   }
-}async function finishRunner(id) {
+}
+
+async function finishRunner(id) {
   try {
     const response = await fetch(ROLL_CALL_API + "/finish", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        id: id
-      })
+      body: JSON.stringify({ id: id })
     });
 
     const data = await response.json();
@@ -1346,7 +1397,6 @@ if (finishedRunners.length > 0) {
 }
 
 loadRollCall();
-  
 updateNextRun();
 
   let deferredInstallPrompt = null;
