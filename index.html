@@ -283,6 +283,118 @@ nav button.active {
   display: block;
   margin-bottom: 2px;
 }
+  /* =========================
+   INSTAGRAM — FROM THE STREETS
+   ========================= */
+
+.instagram-section {
+  padding: 90px 30px 120px;
+}
+
+.instagram-heading {
+  margin-bottom: 45px;
+}
+
+.instagram-heading .label {
+  margin-bottom: 14px;
+}
+
+.instagram-heading h2 {
+  margin: 0 0 22px;
+  font-size: clamp(58px, 14vw, 140px);
+  line-height: 0.82;
+  letter-spacing: -4px;
+  font-weight: 900;
+}
+
+.instagram-handle {
+  display: inline-block;
+  color: #f5f5f5;
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 2px;
+  border-bottom: 1px solid #555;
+  padding-bottom: 5px;
+}
+
+.instagram-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.instagram-post {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #111;
+}
+
+.instagram-post img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.01);
+  transition:
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.4s ease;
+}
+
+.instagram-post:hover img {
+  transform: scale(1.06);
+}
+
+.instagram-post::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.35s ease;
+}
+
+.instagram-post:hover::after {
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.instagram-type {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  right: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: white;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 5px 7px;
+}
+
+.instagram-loading,
+.instagram-error {
+  grid-column: 1 / -1;
+  padding: 40px 0;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #999;
+}
+
+@media (max-width: 700px) {
+  .instagram-section {
+    padding: 75px 18px 110px;
+  }
+
+  .instagram-heading h2 {
+    font-size: clamp(54px, 18vw, 90px);
+    letter-spacing: -3px;
+  }
+
+  .instagram-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+  }
+}
 </style>
 </head>
 
@@ -352,7 +464,82 @@ nav button.active {
   <button onclick="goToSection('events')">VIEW EVENT</button>
 </div>
 </section>
+/* =========================
+   BLACKJACK INSTAGRAM FEED
+   ========================= */
 
+async function loadBlackjackInstagram() {
+  const feed = document.getElementById("instagramFeed");
+
+  if (!feed) return;
+
+  try {
+    const response = await fetch(
+      "https://blackjack-instagram.josetcano.workers.dev/instagram"
+    );
+
+    if (!response.ok) {
+      throw new Error("Instagram feed request failed.");
+    }
+
+    const result = await response.json();
+
+    if (!result.data || !result.data.length) {
+      throw new Error("No Instagram posts returned.");
+    }
+
+    feed.innerHTML = "";
+
+    result.data.slice(0, 12).forEach((post) => {
+
+      const link = document.createElement("a");
+
+      link.className = "instagram-post";
+      link.href = post.permalink;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+
+      const image = document.createElement("img");
+
+      image.src =
+        post.media_type === "VIDEO"
+          ? post.thumbnail_url
+          : post.media_url;
+
+      image.alt = post.caption
+        ? post.caption.substring(0, 100)
+        : "Blackjack Run Club Instagram post";
+
+      image.loading = "lazy";
+
+      link.appendChild(image);
+
+      if (post.media_type === "VIDEO") {
+        const badge = document.createElement("span");
+        badge.className = "instagram-type";
+        badge.textContent = "REEL";
+        link.appendChild(badge);
+      }
+
+      if (post.media_type === "CAROUSEL_ALBUM") {
+        const badge = document.createElement("span");
+        badge.className = "instagram-type";
+        badge.textContent = "MULTI";
+        link.appendChild(badge);
+      }
+
+      feed.appendChild(link);
+    });
+
+  } catch (error) {
+    console.error("Blackjack Instagram:", error);
+
+    feed.innerHTML =
+      '<div class="instagram-error">INSTAGRAM FEED UNAVAILABLE.</div>';
+  }
+}
+
+loadBlackjackInstagram();
 <section id="runs" class="page">
  <div class="runs-heading scroll-reveal">
   <div class="label">Weekly Runs</div>
@@ -1227,6 +1414,81 @@ function setActiveNav(button) {
 
   button.classList.add("active");
 }
+  /* =========================
+   BLACKJACK INSTAGRAM FEED
+   ========================= */
+
+async function loadBlackjackInstagram() {
+  const feed = document.getElementById("instagramFeed");
+
+  if (!feed) return;
+
+  try {
+    const response = await fetch(
+      "https://blackjack-instagram.josetcano.workers.dev/instagram"
+    );
+
+    if (!response.ok) {
+      throw new Error("Instagram feed request failed.");
+    }
+
+    const result = await response.json();
+
+    if (!result.data || !result.data.length) {
+      throw new Error("No Instagram posts returned.");
+    }
+
+    feed.innerHTML = "";
+
+    result.data.slice(0, 12).forEach((post) => {
+      const link = document.createElement("a");
+
+      link.className = "instagram-post";
+      link.href = post.permalink;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+
+      const image = document.createElement("img");
+
+      image.src =
+        post.media_type === "VIDEO"
+          ? post.thumbnail_url
+          : post.media_url;
+
+      image.alt = post.caption
+        ? post.caption.substring(0, 100)
+        : "Blackjack Run Club Instagram post";
+
+      image.loading = "lazy";
+
+      link.appendChild(image);
+
+      if (post.media_type === "VIDEO") {
+        const badge = document.createElement("span");
+        badge.className = "instagram-type";
+        badge.textContent = "REEL";
+        link.appendChild(badge);
+      }
+
+      if (post.media_type === "CAROUSEL_ALBUM") {
+        const badge = document.createElement("span");
+        badge.className = "instagram-type";
+        badge.textContent = "MULTI";
+        link.appendChild(badge);
+      }
+
+      feed.appendChild(link);
+    });
+
+  } catch (error) {
+    console.error("Blackjack Instagram:", error);
+
+    feed.innerHTML =
+      '<div class="instagram-error">INSTAGRAM FEED UNAVAILABLE.</div>';
+  }
+}
+
+loadBlackjackInstagram();
 </script>
 
 <div id="photoModal"
