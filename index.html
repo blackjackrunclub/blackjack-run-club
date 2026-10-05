@@ -1188,8 +1188,37 @@ async function loadRollCall() {
     document.getElementById("finishedCount").textContent =
       finished;
 
-    document.getElementById("stillOutCount").textContent =
-      stillOut;const runnerList = document.getElementById("runnerList");
+   document.getElementById("stillOutCount").textContent =
+  stillOut;
+
+// UPDATE LIVE RUN BOARD
+const liveBoard = document.getElementById("liveRunBoard");
+const liveCheckedIn = document.getElementById("liveCheckedIn");
+const liveFinished = document.getElementById("liveFinished");
+const liveStillOut = document.getElementById("liveStillOut");
+const liveStatus = document.getElementById("liveRunStatus");
+
+if (liveBoard) {
+  liveCheckedIn.textContent = checkins.length;
+  liveFinished.textContent = finished;
+  liveStillOut.textContent = stillOut;
+
+  liveBoard.classList.remove("all-back");
+
+  if (checkins.length === 0) {
+    liveStatus.textContent = "WAITING FOR RUNNERS";
+  } else if (stillOut > 0) {
+    liveStatus.textContent =
+      stillOut === 1
+        ? "1 RUNNER STILL OUT"
+        : stillOut + " RUNNERS STILL OUT";
+  } else {
+    liveStatus.textContent = "ALL RUNNERS ACCOUNTED FOR. ♠";
+    liveBoard.classList.add("all-back");
+  }
+}
+
+const runnerList = document.getElementById("runnerList");
 
 runnerList.innerHTML = "";
 
