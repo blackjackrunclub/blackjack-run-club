@@ -395,6 +395,16 @@ nav button.active {
     gap: 5px;
   }
 }
+
+/* BLACKJACK LIVE RUN BOARD */
+.live-run-board { border:1px solid #555; padding:22px; margin-bottom:18px; background:#101114; }
+.live-run-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:20px; }
+.live-stat { border:1px solid #333; padding:16px 8px; text-align:center; }
+.live-number { display:block; font-size:32px; font-weight:900; }
+.live-stat-label { display:block; margin-top:6px; color:#999; font-size:10px; letter-spacing:1px; }
+.live-status { margin-top:20px; padding-top:18px; border-top:1px solid #333; font-weight:900; letter-spacing:1px; }
+.live-run-board.all-back { border-color:#f5f5f5; }
+
 </style>
 </head>
 
@@ -787,6 +797,17 @@ loadBlackjackInstagram();
     </div>
 
     <button onclick="checkInRunner()">CHECK IN</button>
+  </div>
+
+  <div id="liveRunBoard" class="live-run-board scroll-card">
+    <div class="label">LIVE RUN BOARD</div>
+    <div class="next-run">BLACKJACK ON THE STREETS</div>
+    <div class="live-run-stats">
+      <div class="live-stat"><span id="liveCheckedIn" class="live-number">0</span><span class="live-stat-label">CHECKED IN</span></div>
+      <div class="live-stat"><span id="liveFinished" class="live-number">0</span><span class="live-stat-label">FINISHED</span></div>
+      <div class="live-stat"><span id="liveStillOut" class="live-number">0</span><span class="live-stat-label">STILL OUT</span></div>
+    </div>
+    <div id="liveRunStatus" class="live-status">WAITING FOR RUNNERS</div>
   </div>
 
   <div class="card scroll-card">
