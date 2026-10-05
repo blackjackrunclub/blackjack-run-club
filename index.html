@@ -832,7 +832,7 @@ loadBlackjackInstagram();
   </div>
 
   <div id="liveRunBoard" class="live-run-board">
-  <div class="label">LIVE RUN BOARD</div>
+ <div id="liveRunLabel" class="label">LIVE RUN BOARD</div>
 <div id="liveRunName" class="next-run">BLACKJACK ON THE STREETS</div>
 <div id="liveRunDetails" class="details"></div>
     <div class="live-run-stats">
@@ -1147,127 +1147,30 @@ async function checkInRunner() {
     return;
   }
 
-  // Determine today's Blackjack run
-const today = new Date();
-
-const runDate =
-  today.getFullYear() + "-" +
-  String(today.getMonth() + 1).padStart(2, "0") + "-" +
-  String(today.getDate()).padStart(2, "0");
-
-let runName = "";
-
-const dayOfWeek = today.getDay();
-
-// Sunday Long Run
-if (dayOfWeek === 0) {
-  runName = "SUNDAY LONG RUN";
-}
-
-// Tuesday
-else if (dayOfWeek === 2) {
-
-  // First Tuesday always falls between the 1st and 7th
-  if (today.getDate() <= 7) {
-    runName = "TRACK TUESDAY";
-  } else {
-    runName = "PEOPLES ST SOCIAL";
-  }
-}
-
-// No regular Blackjack run today
-else {
-  alert("Regular Blackjack check-in is only available on Sundays and Tuesdays.");
-  return;
-}
-
-  try {
-    const response = await fetch(ROLL_CALL_API + "/checkin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        runnerName: runnerName,
-        runDate: runDate,
-        runName: runName
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || "Check in failed.");
-    }
-
-    nameInput.value = "";
-
-    alert("YOU'RE CHECKED IN.");
-
-    loadRollCall();
-
-  } catch (error) {
-    console.error(error);
-    alert("Unable to check in. Try again.");
-  }
-}
-
-async function loadRollCall() {
-  const today = new Date();
-  const runDate =
-    today.getFullYear() + "-" +
-    String(today.getMonth() + 1).padStart(2, "0") + "-" +
-    String(today.getDate()).padStart(2, "0");
-
-  try {
-    const response = await fetch(
-      ROLL_CALL_API + "/checkins?date=" +
-      encodeURIComponent(runDate)
-    );
-
-    const data = await response.json();
-    const checkins = data.checkins || [];
-
-    const finished = checkins.filter(
-      runner => runner.status === "FINISHED"
-    ).length;
-
-    const stillOut = checkins.filter(
-      runner => runner.status === "OUT"
-    ).length;
-
-    document.getElementById("checkedInCount").textContent =
-      checkins.length;
-
-    document.getElementById("finishedCount").textContent =
-      finished;
-
-   document.getElementById("stillOutCount").textContent =
-  stillOut;
-
-// UPDATE LIVE RUN BOARD
-const liveBoard = document.getElementById("liveRunBoard");
-const liveCheckedIn = document.getElementById("liveCheckedIn");
-const liveFinished = document.getElementById("liveFinished");
-const liveStillOut = document.getElementById("liveStillOut");
-const liveStatus = document.getElementById("liveRunStatus");
-
-if (liveBoard) {
-  // DETERMINE TODAY'S BLACKJACK RUN
+ // LIVE RUN / NEXT RUN MODE
 const today = new Date();
 const day = today.getDay();
 const date = today.getDate();
 
-let liveRunName = "BLACKJACK ON THE STREETS";
-let liveRunDetails = "NO SCHEDULED RUN TODAY";
+const liveRunLabel = document.getElementById("liveRunLabel");
+const liveRunNameEl = document.getElementById("liveRunName");
+const liveRunDetailsEl = document.getElementById("liveRunDetails");
+
+let liveRunName = "";
+let liveRunDetails = "";
 
 if (day === 0) {
-  // SUNDAY
+
+  // SUNDAY — LIVE MODE
+  liveRunLabel.textContent = "LIVE RUN BOARD";
   liveRunName = "SUNDAY LONG RUN";
   liveRunDetails = "ART MUSEUM OF SOUTH TEXAS · 6:00 AM";
 
 } else if (day === 2) {
-  // TUESDAY
+
+  // TUESDAY — LIVE MODE
+  liveRunLabel.textContent = "LIVE RUN BOARD";
+
   if (date <= 7) {
     liveRunName = "TRACK TUESDAY";
     liveRunDetails = "BAKER MIDDLE SCHOOL · 6:00 PM";
@@ -1275,13 +1178,62 @@ if (day === 0) {
     liveRunName = "PEOPLE'S ST SOCIAL";
     liveRunDetails = "T-HEAD · 6:00 PM";
   }
+
+} else {
+
+  // NO RUN TODAY — NEXT RUN MODE
+  liveRunLabel.textContent = "NEXT RUN";
+
+  const upcoming = [];
+
+  for (let i = 1; i <= 7; i++) {
+
+    const nextDate = new Date(today);
+    nextDate.setDate(today.getDate() + i);
+
+    const nextDay = nextDate.getDay();
+
+    if (nextDay === 0) {
+      upcoming.push({
+        daysAway: i,
+        name: "SUNDAY LONG RUN",
+        details: "ART MUSEUM OF SOUTH TEXAS · 6:00 AM"
+      });
+    }
+
+    if (nextDay === 2) {
+
+      const firstTuesday = nextDate.getDate() <= 7;
+
+      upcoming.push({
+        daysAway: i,
+        name: firstTuesday
+          ? "TRACK TUESDAY"
+          : "PEOPLE'S ST SOCIAL",
+        details: firstTuesday
+          ? "BAKER MIDDLE SCHOOL · 6:00 PM"
+          : "T-HEAD · 6:00 PM"
+      });
+    }
+  }
+
+  upcoming.sort((a, b) => a.daysAway - b.daysAway);
+
+  const nextRun = upcoming[0];
+
+  liveRunName = nextRun.name;
+
+  const countdown =
+    nextRun.daysAway === 1
+      ? "TOMORROW"
+      : nextRun.daysAway + " DAYS AWAY";
+
+  liveRunDetails =
+    nextRun.details + " · " + countdown;
 }
 
-document.getElementById("liveRunName").textContent =
-  liveRunName;
-
-document.getElementById("liveRunDetails").textContent =
-  liveRunDetails;
+liveRunNameEl.textContent = liveRunName;
+liveRunDetailsEl.textContent = liveRunDetails;
   liveCheckedIn.textContent = checkins.length;
   liveFinished.textContent = finished;
   liveStillOut.textContent = stillOut;
