@@ -835,7 +835,7 @@ loadBlackjackInstagram();
  <div id="liveRunLabel" class="label">LIVE RUN BOARD</div>
 <div id="liveRunName" class="next-run">BLACKJACK ON THE STREETS</div>
 <div id="liveRunDetails" class="details"></div>
-    <div class="live-run-stats">
+   <div id="liveRunStats" class="live-run-stats">
       <div class="live-stat"><span id="liveCheckedIn" class="live-number">0</span><span class="live-stat-label">CHECKED IN</span></div>
       <div class="live-stat"><span id="liveFinished" class="live-number">0</span><span class="live-stat-label">FINISHED</span></div>
       <div class="live-stat"><span id="liveStillOut" class="live-number">0</span><span class="live-stat-label">STILL OUT</span></div>
@@ -1155,19 +1155,24 @@ const date = today.getDate();
 const liveRunLabel = document.getElementById("liveRunLabel");
 const liveRunNameEl = document.getElementById("liveRunName");
 const liveRunDetailsEl = document.getElementById("liveRunDetails");
-
+const liveRunStats = document.getElementById("liveRunStats");
+  
 let liveRunName = "";
 let liveRunDetails = "";
 
 if (day === 0) {
-
+liveRunStats.style.display = "grid";
+liveStatus.style.display = "block";
+  
   // SUNDAY — LIVE MODE
   liveRunLabel.textContent = "LIVE RUN BOARD";
   liveRunName = "SUNDAY LONG RUN";
   liveRunDetails = "ART MUSEUM OF SOUTH TEXAS · 6:00 AM";
 
 } else if (day === 2) {
-
+liveRunStats.style.display = "grid";
+liveStatus.style.display = "block";
+  
   // TUESDAY — LIVE MODE
   liveRunLabel.textContent = "LIVE RUN BOARD";
 
@@ -1182,6 +1187,8 @@ if (day === 0) {
 } else {
 
   // NO RUN TODAY — NEXT RUN MODE
+  liveRunStats.style.display = "none";
+liveStatus.style.display = "none";
   liveRunLabel.textContent = "NEXT RUN";
 
   const upcoming = [];
