@@ -437,6 +437,17 @@ nav button.active {
   color: #f5f5f5 !important;
 }
 
+
+/* OPEN DOOR RUN — EVENT FEATURE */
+.purple-door-link { display:inline-block; margin-top:24px; padding:14px 18px; background:#b879e8; color:#090a0c; font-size:13px; font-weight:900; letter-spacing:1px; text-decoration:none; text-transform:uppercase; line-height:1.5; }
+.purple-door-link:hover, .purple-door-link:focus-visible { background:#e1baff; }
+.open-door-card { border-color:#a969e9; background:linear-gradient(155deg,#21142b 0%,#101114 60%); }
+.open-door-card .label { color:#c99aff; }
+.open-door-card .next-run { color:#f8f3ff; }
+.open-door-flyer { display:block; width:100%; max-width:720px; height:auto; margin:20px auto; }
+.donation-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:20px 0; }
+.donation-list span { padding:12px; border:1px solid #65477a; color:#f5eaff; font-weight:700; font-size:13px; }
+@media(max-width:420px) { .donation-list { grid-template-columns:1fr; } }
 </style>
 </head>
 
@@ -489,22 +500,13 @@ nav button.active {
       Bet on yourself.
     </div>
   </div>
-  <div class="card scroll-card">
-  <div class="label">Upcoming Event</div>
-  <div class="next-run">DURUS SIM</div>
-
-  <img src="7798.png"
-       alt="Blackjack Durus Sim Course Map"
-       style="width:100%; height:auto; display:block; margin:20px 0;">
-
-  <div class="details">
-    2 HOURS • 3 COURSES • 40 MINUTES EACH
+  <div id="openDoorHomeFeature" class="card scroll-card open-door-card">
+    <div class="label">UPCOMING EVENT • OCTOBER 18</div>
+    <div class="next-run">BLACKJACK OPEN DOOR RUN</div>
+    <img class="open-door-flyer" src="8413.png" alt="Blackjack Open Door Run flyer" loading="lazy">
+    <div class="details">6:00 AM • ART MUSEUM OF SOUTH TEXAS<br>BENEFITING THE PURPLE DOOR<br>BRING A WISH-LIST DONATION</div>
+    <button onclick="goToSection('events')">VIEW EVENT &amp; DONATION LIST</button>
   </div>
-
-  <br>
-
-  <button onclick="goToSection('events')">VIEW EVENT</button>
-</div>
 </section>
 
   <script>
@@ -688,27 +690,29 @@ loadBlackjackInstagram();
     <h2>EVENTS</h2>
   </div>
 
+  <div id="openDoorEventFeature" class="card scroll-card open-door-card">
+    <div class="label">UPCOMING EVENT • OCTOBER 18, 2026</div>
+    <div class="next-run">BLACKJACK OPEN DOOR RUN</div>
+    <img class="open-door-flyer" src="8413.png" alt="Blackjack Open Door Run flyer — October 18 at 6 AM, Art Museum, benefiting The Purple Door" loading="lazy">
+    <div class="details">SUNDAY • 6:00 AM • ART MUSEUM OF SOUTH TEXAS<br>BENEFITING THE PURPLE DOOR<br>DOMESTIC VIOLENCE AWARENESS MONTH</div>
+    <p class="details">Bring a wish-list item to donate. Every contribution helps support individuals and families affected by domestic violence.</p>
+    <div class="label">DONATION WISH LIST</div>
+    <div class="donation-list"><span>HYGIENE PRODUCTS</span><span>SHEETS</span><span>TOWELS</span><span>PILLOWS</span><span>DIAPERS</span><span>WIPES</span></div>
+    <a href="https://purpledoortx.org/" target="_blank" rel="noopener noreferrer" class="purple-door-link">LEARN MORE ABOUT THE PURPLE DOOR ↗</a>
+  </div>
+
   <div class="card scroll-card">
-    <div class="label">UPCOMING EVENT</div>
-    <div class="next-run">DURUS SIM</div>
-
-    <img src="7798.png" alt="Blackjack Durus Sim Course Map"
-         style="width:100%; height:auto; display:block; margin:20px 0;">
-
-    <div class="details">
-      2 HOURS • 3 COURSES • 40 MINUTES EACH<br><br>
-
-      The course changes every 40 minutes.<br><br>
-
-      Each team uses ONE watch for the entire event. The runner on course must have the watch.<br><br>
-
-      Teams control their own rotation. Runners may switch after any completed lap or run multiple laps.<br><br>
-
-      All exchanges must happen at the designated Exchange Point.
+    <div class="label">PAST EVENT • OCTOBER 4, 2026</div>
+    <div class="next-run">MINI DURUS SIM</div>
+    <img src="7798.png" alt="Blackjack Mini Durus Sim Course Map" style="width:100%;height:auto;display:block;margin:20px 0;" loading="lazy">
+    <div class="details">2 HOURS • 3 COURSES • 40 MINUTES EACH<br><br>
+      Three progressively longer courses, changing every 40 minutes.<br><br>
+      Solo runners or teams of 2–4. Each team used ONE watch for the entire event; the runner on course carried the watch.<br><br>
+      Teams controlled their rotation, switching after any completed lap or running multiple laps. All exchanges took place at the designated Exchange Point.
     </div>
   </div>
 
- <div class="card scroll-card">
+<div class="card scroll-card">
   <div class="label">PAST EVENT</div>
   <div class="next-run">THE CUT</div>
 
@@ -1050,7 +1054,7 @@ function updateNextRun() {
       if (runTime > now) {
         upcomingRuns.push({
           date: runTime,
-          name: "SUNDAY LONG RUN",
+          name: getLocalRunDate(runTime) === "2026-10-18" ? "BLACKJACK OPEN DOOR RUN" : "SUNDAY LONG RUN",
           time: "6:00 AM",
           location: "Art Museum of South Texas"
         });
@@ -1112,7 +1116,7 @@ const todayDay = today.getDay();
 
 if (todayDay === 0) {
   checkinLabel.textContent = "TODAY'S RUN";
-  checkinRunName.textContent = "SUNDAY LONG RUN";
+  checkinRunName.textContent = getLocalRunDate(today) === "2026-10-18" ? "BLACKJACK OPEN DOOR RUN" : "SUNDAY LONG RUN";
 }
 
 else if (todayDay === 2) {
@@ -1149,7 +1153,7 @@ function getRunForDate(date) {
 
   if (day === 0) {
     return {
-      name: "SUNDAY LONG RUN",
+      name: getLocalRunDate(date) === "2026-10-18" ? "BLACKJACK OPEN DOOR RUN" : "SUNDAY LONG RUN",
       details: "ART MUSEUM OF SOUTH TEXAS · 6:00 AM"
     };
   }
@@ -1398,6 +1402,15 @@ async function finishRunner(id) {
 
 loadRollCall();
 updateNextRun();
+if (getLocalRunDate() > "2026-10-18") {
+  const homeFeature = document.getElementById("openDoorHomeFeature");
+  if (homeFeature) homeFeature.style.display = "none";
+  const eventFeature = document.getElementById("openDoorEventFeature");
+  if (eventFeature) {
+    const label = eventFeature.querySelector(".label");
+    if (label) label.textContent = "PAST EVENT • OCTOBER 18, 2026";
+  }
+}
 
   let deferredInstallPrompt = null;
 
